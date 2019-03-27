@@ -5,6 +5,22 @@ In this project, you will find many different methods to cypher a message.
 The code is written a way you can understand it quite easely, but it's not magic.
 You'll need to think about it and make some efforts to understand it !
 
+=====How to use it ?=====
+First download Eclipse (The last version)
+Install Eclipse
+Launch Eclipse
+
+Next clone / download this project
+Then go to Eclipse and follow the procedure :
+File -> Open project from File system -> Directory -> [go to the project] -> Select the project with the checkbox -> Finish
+
+Then, you should have access to the project.
+To launch it, you can :
+	-click the run button
+	-ctrl + f11
+	-use the menu : Run -> Run
+To change it : open the project from the Eclipse window -> open the src folder -> open the launcher package (folder) -> double click on Launcher.java
+
 =====ChuckNorris=====
 Transform a text in binary and then transform the binary in a sequence of 0.
 This sequence consists of several consecutive packets of 0.
