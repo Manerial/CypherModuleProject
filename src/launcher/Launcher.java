@@ -1,11 +1,11 @@
 package launcher;
 import java.math.BigInteger;
 
-import cypherMethod.ChuckNorris;
-import cypherMethod.Enigma;
-import cypherMethod.RSA;
-import cypherMethod.Steganography;
-import cypherMethod.Vigenere;
+import cypher_method.ChuckNorris;
+import cypher_method.Enigma;
+import cypher_method.RSA;
+import cypher_method.Steganography;
+import cypher_method.Vigenere;
 
 public class Launcher {
 

@@ -1,4 +1,4 @@
-package cypherAbstract;
+package cypher_abstract;
 
 public abstract class CypherAbstract implements CypherInterface {
 	
