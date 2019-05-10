@@ -2,7 +2,7 @@
 A little Java module to understand different cypher (cryptography) method
 
 In this project, you will find many different methods to cypher a message.
-The code is written a way you can understand it quite easely, but it's not magic.
+The code is written a way you can understand it quite easily, but it's not magic.
 You'll need to think about it and make some efforts to understand it !
 
 =====How to use it ?=====
