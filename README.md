@@ -21,6 +21,11 @@ To launch it, you can :
 	-use the menu : Run -> Run
 To change it : open the project from the Eclipse window -> open the src folder -> open the launcher package (folder) -> double click on Launcher.java
 
+=====RESOURCES=====
+This project uses one resources file, the image used for Steganography.
+This file is stored in the resources folder of the CypherModuleProject project.
+You can update it as much as you want (be careful to keep the same name !).
+
 =====ChuckNorris=====
 Transform a text in binary and then transform the binary in a sequence of 0.
 This sequence consists of several consecutive packets of 0.
