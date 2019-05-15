@@ -56,7 +56,7 @@ public class Enigma extends CypherAbstract {
 		rotorPos3 = 9;
 		inputFiches('A', 'E', 'Z', 'P', 'W', 'R', 'T', 'V', 'L', 'O', 'R', 'S');
 	}
-	
+
 	/**
 	 * Create the plugs to permute many characters
 	 * 
@@ -118,17 +118,22 @@ public class Enigma extends CypherAbstract {
 	 */
 	@Override
 	public String cryptText(String clearText) {
-		rotor_pos_reset();
-		String encodedMessage = "";
-		for (char character : clearText.toUpperCase().toCharArray()) {
-			if (character != ' ') {
-				char encoded_c = crypt(character);
-				encodedMessage += (fiches.containsKey(encoded_c)) ? fiches.get(encoded_c) : encoded_c;
-			} else {
-				encodedMessage += ' ';
+		try {
+			rotor_pos_reset();
+			String encodedMessage = "";
+			for (char character : clearText.toUpperCase().toCharArray()) {
+				if (character != ' ') {
+					char encoded_c = crypt(character);
+					encodedMessage += (fiches.containsKey(encoded_c)) ? fiches.get(encoded_c) : encoded_c;
+				} else {
+					encodedMessage += ' ';
+				}
 			}
+			return encodedMessage;
+		} catch (ArrayIndexOutOfBoundsException e) {
+			System.out.println("The message mustn't contains specials char");
 		}
-		return encodedMessage;
+		return null;
 	}
 
 	/**
@@ -136,6 +141,7 @@ public class Enigma extends CypherAbstract {
 	 */
 	@Override
 	public String uncryptText(String cypherText) {
+		try {
 		rotor_pos_reset();
 		String decodedMessage = "";
 		for (char character : cypherText.toCharArray()) {
@@ -147,6 +153,10 @@ public class Enigma extends CypherAbstract {
 			}
 		}
 		return decodedMessage;
+		} catch (NullPointerException e) {
+			System.out.println("The cypher message is null");
+		}
+		return null;
 	}
 
 	/**
