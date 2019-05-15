@@ -22,7 +22,7 @@ import cypher_abstract.CypherAbstract;
  *
  */
 public class Steganography extends CypherAbstract{
-	private static final String RESSOURCE_PATH = System.getProperty("user.dir") + "\\ressources\\steganography\\";
+	private static final String RESOURCES_PATH = System.getProperty("user.dir") + "\\resources\\steganography\\";
 	private String normalImageName;
 	private String cryptedTextImageName;
 
@@ -38,17 +38,17 @@ public class Steganography extends CypherAbstract{
 	 */
 	@Override
 	public String cryptText(String clearText) {
-		String imageSourceName = RESSOURCE_PATH + normalImageName;
+		String imageSourceName = RESOURCES_PATH + normalImageName;
 		BufferedImage bufferedImageSource = readImage(imageSourceName);
 
 		BufferedImage imageToCrypt = copyImage(bufferedImageSource);
 		imageToCrypt = encodeImage(imageToCrypt, clearText);
 		try {
-			saveImage(imageToCrypt, new File(RESSOURCE_PATH + cryptedTextImageName), "png");
+			saveImage(imageToCrypt, new File(RESOURCES_PATH + cryptedTextImageName), "png");
 		} catch(Exception e) {
 			return "Fail saving image";
 		}
-		return RESSOURCE_PATH + cryptedTextImageName;
+		return RESOURCES_PATH + cryptedTextImageName;
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class Steganography extends CypherAbstract{
 	 * @return the message hidden in the image
 	 */
 	public String uncryptText() {
-		BufferedImage image = copyImage(readImage(RESSOURCE_PATH + cryptedTextImageName));
+		BufferedImage image = copyImage(readImage(RESOURCES_PATH + cryptedTextImageName));
 		byte[] decode = decodeImage(getBytesImage(image));
 		return(new String(decode));
 	}
