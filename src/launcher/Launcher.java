@@ -10,7 +10,7 @@ import cypher_method.Vigenere;
 public class Launcher {
 
 	public static void main(String[] args) {
-		String clearText = "Mon message est drolement long dis donc, mais il faut que je teste car si je ne peut pas faire de messages encore plus longs je risque de l'avoir dans l'os\n";
+		String clearText = "Mon test est sûr";
 		testRSA(new BigInteger("794138950211"), new BigInteger("846784129943"), clearText);
 		testVigenere("Ma clé est géniale", clearText);
 		testEnigma(clearText);

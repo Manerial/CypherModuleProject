@@ -142,17 +142,17 @@ public class Enigma extends CypherAbstract {
 	@Override
 	public String uncryptText(String cypherText) {
 		try {
-		rotor_pos_reset();
-		String decodedMessage = "";
-		for (char character : cypherText.toCharArray()) {
-			if (character != ' ') {
-				char decoded_c = (fiches.containsKey(character)) ? fiches.get(character) : character;
-				decodedMessage += crypt(decoded_c);
-			} else {
-				decodedMessage += ' ';
+			rotor_pos_reset();
+			String decodedMessage = "";
+			for (char character : cypherText.toCharArray()) {
+				if (character != ' ') {
+					char decoded_c = (fiches.containsKey(character)) ? fiches.get(character) : character;
+					decodedMessage += crypt(decoded_c);
+				} else {
+					decodedMessage += ' ';
+				}
 			}
-		}
-		return decodedMessage;
+			return decodedMessage;
 		} catch (NullPointerException e) {
 			System.out.println("The cypher message is null");
 		}
