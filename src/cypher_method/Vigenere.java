@@ -12,7 +12,7 @@ import cypher_abstract.CypherAbstract;
  *
  */
 public class Vigenere extends CypherAbstract {
-	private String encodingKey;
+	private String vigenereKey;
 	private ArrayList<Character> characters = new ArrayList<>();
 	// will fill the characters arraylist
 	private char[] available_characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZàâäçéèëêïîôùûÀÂÊÉ,?;.:!(){}[]+-=/\\&\"' ".toCharArray();
@@ -24,7 +24,11 @@ public class Vigenere extends CypherAbstract {
 
 	public Vigenere(String encodingKey) {
 		setCharacters();
-		this.encodingKey = encodingKey;
+		setEncodingKey(encodingKey);
+	}
+
+	public void setEncodingKey(String encodingKey) {
+		this.vigenereKey = encodingKey;
 	}
 	
 	/**
@@ -41,9 +45,9 @@ public class Vigenere extends CypherAbstract {
 	public String cryptText(String clearText) {
 		String encodedMessage = "";
 		for(int characterPosition = 0; characterPosition < clearText.length(); characterPosition++) {
-			int code_char_clearText = characters.indexOf(clearText.charAt(characterPosition));
-			int code_char_encodingKey = characters.indexOf(encodingKey.charAt(characterPosition % encodingKey.length()));
-			encodedMessage += characters.get(((code_char_clearText + code_char_encodingKey) % characters.size()));
+			int codeCharClearText = getCodeCharAtPosition(clearText, characterPosition);
+			int codeCharVigenereKey = getVigenereCharacterAtPosition(characterPosition);
+			encodedMessage += encodeVigenere(codeCharClearText, codeCharVigenereKey);
 		}
 		return encodedMessage;
 	}
@@ -61,16 +65,28 @@ public class Vigenere extends CypherAbstract {
 	@Override
 	public String uncryptText(String cypherText) {
 		String decodedMessage = "";
-		for(int i = 0; i < cypherText.length(); i++) {
-			int code_char_message = characters.indexOf(cypherText.charAt(i));
-			int code_char_clef = characters.indexOf(encodingKey.charAt(i % encodingKey.length()));
-			decodedMessage += characters.get(((characters.size() + code_char_message - code_char_clef) % characters.size()));
+		for(int characterPosition = 0; characterPosition < cypherText.length(); characterPosition++) {
+			int codeCharCypherText = getCodeCharAtPosition(cypherText, characterPosition);
+			int codeCharVigenereKey = getVigenereCharacterAtPosition(characterPosition);
+			decodedMessage += decodeVigenere(codeCharCypherText, codeCharVigenereKey);
 		}
 		return decodedMessage;
 	}
 
-	public void setEncodingKey(String encodingKey) {
-		this.encodingKey = encodingKey;
+	private Character encodeVigenere(int codeCharClearText, int codeCharVigenereKey) {
+		return characters.get(((codeCharClearText + codeCharVigenereKey) % characters.size()));
+	}
+
+	private Character decodeVigenere(int codeCharCypherText, int codeCharVigenereKey) {
+		return characters.get(((characters.size() + codeCharCypherText - codeCharVigenereKey) % characters.size()));
+	}
+
+	private int getVigenereCharacterAtPosition(int characterPosition) {
+		return characters.indexOf(vigenereKey.charAt(characterPosition % vigenereKey.length()));
+	}
+
+	private int getCodeCharAtPosition(String cypherText, int characterPosition) {
+		return characters.indexOf(cypherText.charAt(characterPosition));
 	}
 	
 	private void setCharacters() {

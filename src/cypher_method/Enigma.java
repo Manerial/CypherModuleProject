@@ -42,19 +42,19 @@ public class Enigma extends CypherAbstract {
 	public static final Rotor mirror2	= new Rotor("KRFXOCTIHQAZWPENJBVGYSMDUL".toCharArray());
 	public static final Rotor mirror3	= new Rotor("TJLWNZKUYBGCPESMRQOAHXDVIF".toCharArray());
 
-	private HashMap<Character, Character> fiches	= new HashMap<>();
+	private HashMap<Character, Character> plugs	= new HashMap<>();
 	private RotorIncrementor increment_rotor = new RotorIncrementor(rotor1, rotor2, rotor3, mirror1);
 
 	public Enigma(Rotor r1, Rotor r2, Rotor r3, Rotor mirror, HashMap<Character, Character> fiches) {
 		increment_rotor = new RotorIncrementor(r1, r2, r3, mirror);
-		this.fiches = fiches;
+		this.plugs = fiches;
 	}
 
 	public Enigma() {
 		rotorPos1 = 5;
 		rotorPos2 = 12;
 		rotorPos3 = 9;
-		inputFiches('A', 'E', 'Z', 'P', 'W', 'R', 'T', 'V', 'L', 'O', 'R', 'S');
+		inputPlugs('A', 'E', 'Z', 'P', 'W', 'R', 'T', 'V', 'L', 'O', 'R', 'S');
 	}
 
 	/**
@@ -73,25 +73,25 @@ public class Enigma extends CypherAbstract {
 	 * @param c11 : the character to permute with c12
 	 * @param c12 : the character to permute with c11
 	 */
-	private void inputFiches(char c1, char c2, char c3, char c4, char c5, char c6, char c7, char c8, char c9, char c10, char c11, char c12) {
+	private void inputPlugs(char c1, char c2, char c3, char c4, char c5, char c6, char c7, char c8, char c9, char c10, char c11, char c12) {
 		//fiche 1
-		this.fiches.put(c1, c2);
-		this.fiches.put(c2, c1);
+		this.plugs.put(c1, c2);
+		this.plugs.put(c2, c1);
 		//fiche 2
-		this.fiches.put(c3, c4);
-		this.fiches.put(c4, c3);
+		this.plugs.put(c3, c4);
+		this.plugs.put(c4, c3);
 		//fiche 3
-		this.fiches.put(c5, c6);
-		this.fiches.put(c6, c5);
+		this.plugs.put(c5, c6);
+		this.plugs.put(c6, c5);
 		//fiche 4
-		this.fiches.put(c7, c8);
-		this.fiches.put(c8, c7);
+		this.plugs.put(c7, c8);
+		this.plugs.put(c8, c7);
 		//fiche 5
-		this.fiches.put(c9, c10);
-		this.fiches.put(c10, c9);
+		this.plugs.put(c9, c10);
+		this.plugs.put(c10, c9);
 		//fiche 6
-		this.fiches.put(c11, c12);
-		this.fiches.put(c12, c11);
+		this.plugs.put(c11, c12);
+		this.plugs.put(c12, c11);
 	}
 
 	/**
@@ -105,26 +105,38 @@ public class Enigma extends CypherAbstract {
 	 * @param pos6 : the position of the rotor 6
 	 */
 	public void rotor_pos_set(int pos1, int pos2, int pos3, int pos4, int pos5, int pos6) {
-		rotor1.setBase(pos1);
-		rotor2.setBase(pos2);
-		rotor3.setBase(pos3);
-		rotor4.setBase(pos4);
-		rotor5.setBase(pos5);
-		rotor6.setBase(pos6);
+		rotorPos1 = pos1;
+		rotorPos2 = pos2;
+		rotorPos3 = pos3;
+		rotorPos4 = pos4;
+		rotorPos5 = pos5;
+		rotorPos6 = pos6;
+	}
+
+	/**
+	 * Encode a clear message
+	 */
+	@Override
+	public String cryptText(String clearText) {
+		rotor_pos_reset();
+		String encodedMessage = encodeMessage(clearText);
+		return encodedMessage;
 	}
 
 	/**
 	 * Encrypt each character using the Enigma's method
+	 * 
+	 * @param clearText : The text to encode
+	 * @return the encoded text
 	 */
-	@Override
-	public String cryptText(String clearText) {
+	private String encodeMessage(String clearText) {
 		try {
-			rotor_pos_reset();
 			String encodedMessage = "";
 			for (char character : clearText.toUpperCase().toCharArray()) {
 				if (character != ' ') {
 					char encoded_c = crypt(character);
-					encodedMessage += (fiches.containsKey(encoded_c)) ? fiches.get(encoded_c) : encoded_c;
+					encoded_c = permutePlug(encoded_c);
+					encodedMessage += encoded_c;
 				} else {
 					encodedMessage += ' ';
 				}
@@ -137,26 +149,48 @@ public class Enigma extends CypherAbstract {
 	}
 
 	/**
-	 * Decrypt each character using the Enigma's method
+	 * Decode a ciphered message
 	 */
 	@Override
 	public String uncryptText(String cypherText) {
 		try {
 			rotor_pos_reset();
-			String decodedMessage = "";
-			for (char character : cypherText.toCharArray()) {
-				if (character != ' ') {
-					char decoded_c = (fiches.containsKey(character)) ? fiches.get(character) : character;
-					decodedMessage += crypt(decoded_c);
-				} else {
-					decodedMessage += ' ';
-				}
-			}
+			String decodedMessage = decodeMessage(cypherText);
 			return decodedMessage;
 		} catch (NullPointerException e) {
 			System.out.println("The cypher message is null");
 		}
 		return null;
+	}
+
+	/**
+	 * Decrypt each character using the Enigma's method
+	 * 
+	 * @param cypherText : The text to decode
+	 * @return the decoded text
+	 */
+	private String decodeMessage(String cypherText) {
+		String decodedMessage = "";
+		for (char character : cypherText.toCharArray()) {
+			if (character != ' ') {
+				char decoded_c = permutePlug(character);
+				decoded_c = crypt(decoded_c);
+				decodedMessage += decoded_c;
+			} else {
+				decodedMessage += ' ';
+			}
+		}
+		return decodedMessage;
+	}
+
+	/**
+	 * Replace a character by it equivalent in plugs
+	 * 
+	 * @param character : the character to replace
+	 * @return the permuted character
+	 */
+	private char permutePlug(char character) {
+		return (plugs.containsKey(character)) ? plugs.get(character) : character;
 	}
 
 	/**
@@ -282,7 +316,7 @@ class Rotor {
 	 * @param rotation : the basic position of the rotor
 	 */
 	protected void setBase(int rotation) {
-		while (this.rotation != rotation) {
+		while (this.rotation != rotation % 26) {
 			increment();
 		}
 	}
