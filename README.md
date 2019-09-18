@@ -36,7 +36,9 @@ This file is stored in the resources folder of the CypherModuleProject project.
 
 You can update it as much as you want (be careful to keep the same name !).
 
-## ChuckNorris
+## Architecture
+
+### ChuckNorris
 Transform a text in binary and then transform the binary in a sequence of 0.
 
 This sequence consists of several consecutive packets of 0.
@@ -49,7 +51,7 @@ Example : 01001110000 -> 0+1+00+111+0000 -> 00 0, 0 0, 00 00, 0 000, 00 0000.
 
 This encoding method is symmetric.
 
-## ENIGMA
+### ENIGMA
 Encrypt a message using the ENIGMA method.
 
 A character will undergo many permutations
@@ -66,14 +68,14 @@ And then it will be the end.
 
 This encoding method is symmetric (thanks to the mirror)
 
-## RSA
+### RSA
 Uses the RSA cypher method to encrypt/decrypt a message.
 
 It uses big prime numbers and modulo to always get a different result, with big calculations.
 
 This method is not symmetric.
 
-## STEGANOGRAPHY
+### STEGANOGRAPHY
 Hide a message in the least significant bits of an image.
 
 A byte contains 8 bits and as the color is mostly contain in the high significant bits.
@@ -82,7 +84,7 @@ With this method, we can use the last bits of each byte to hide a message in the
 
 CAUTION : Steganography is not cryptography !
 
-## VIGENERE
+### VIGENERE
 Encode a text with a key using their position in the alphabet or in a list of characters.
 
 This encoding method is symmetric.
