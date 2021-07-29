@@ -17,8 +17,8 @@ import cypher_abstract.CypherAbstract;
  */
 public class ChuckNorris extends CypherAbstract {
 	private static final char CHUCK_NORRIS_BODY = '0';
-	private static final String CHUCK_NORRIS_DELIMITER_0 = "00";
-	private static final String CHUCK_NORRIS_DELIMITER_1 = "000";
+	private static final String CHUCK_NORRIS_DELIMITER_0 = "";
+	private static final String CHUCK_NORRIS_DELIMITER_1 = "";
 	
 	/**
 	 * Encode clear text to binary
