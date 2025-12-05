@@ -1,8 +1,7 @@
 package cypher.Vigenere;
 
 import cypher.*;
-
-import java.util.*;
+import lombok.*;
 
 /**
  * Encode a text with a key using their position in the alphabet or in a list of characters.
@@ -11,25 +10,11 @@ import java.util.*;
  * @author JHER
  *
  */
+@NoArgsConstructor
+@AllArgsConstructor
 public class VigenereComplexAlphabet extends CypherAbstract {
-    private String vigenereKey;
-    private final ArrayList<Character> characters = new ArrayList<>();
-    // will fill the characters arraylist
-    private final char[] available_characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZàâäçéèëêïîôùûÀÂÊÉ,?;.:!(){}[]+-=/\\&\"' ".toCharArray();
-
-
-    public VigenereComplexAlphabet() {
-        setCharacters();
-    }
-
-    public VigenereComplexAlphabet(String encodingKey) {
-        setCharacters();
-        setEncodingKey(encodingKey);
-    }
-
-    public void setEncodingKey(String encodingKey) {
-        this.vigenereKey = encodingKey;
-    }
+    @Setter
+    private String key;
 
     /**
      * Encode a text with a key using their position in the characters list.
@@ -43,11 +28,14 @@ public class VigenereComplexAlphabet extends CypherAbstract {
      */
     @Override
     public String encrypt(String clearText) {
+        if (key.isEmpty()) {
+            return clearText;
+        }
         StringBuilder encodedMessage = new StringBuilder();
         for (int characterPosition = 0; characterPosition < clearText.length(); characterPosition++) {
-            int codeCharClearText = getCodeCharAtPosition(clearText, characterPosition);
-            int codeCharVigenereKey = getVigenereCharacterAtPosition(characterPosition);
-            encodedMessage.append(encodeVigenere(codeCharClearText, codeCharVigenereKey));
+            char charToEncode = clearText.charAt(characterPosition);
+            char keyChar = key.charAt(characterPosition % key.length());
+            encodedMessage.append(encodeVigenere(charToEncode, keyChar));
         }
         return encodedMessage.toString();
     }
@@ -64,34 +52,23 @@ public class VigenereComplexAlphabet extends CypherAbstract {
      */
     @Override
     public String decipher(String cypherText) {
+        if (key.isEmpty()) {
+            return cypherText;
+        }
         StringBuilder decodedMessage = new StringBuilder();
         for (int characterPosition = 0; characterPosition < cypherText.length(); characterPosition++) {
-            int codeCharCypherText = getCodeCharAtPosition(cypherText, characterPosition);
-            int codeCharVigenereKey = getVigenereCharacterAtPosition(characterPosition);
-            decodedMessage.append(decodeVigenere(codeCharCypherText, codeCharVigenereKey));
+            char charToDecode = cypherText.charAt(characterPosition);
+            char keyChar = key.charAt(characterPosition % key.length());
+            decodedMessage.append(decodeVigenere(charToDecode, keyChar));
         }
         return decodedMessage.toString();
     }
 
-    private Character encodeVigenere(int codeCharClearText, int codeCharVigenereKey) {
-        return characters.get(((codeCharClearText + codeCharVigenereKey) % characters.size()));
+    private char encodeVigenere(char charToEncode, char charKey) {
+        return (char) (charToEncode + charKey);
     }
 
-    private Character decodeVigenere(int codeCharCypherText, int codeCharVigenereKey) {
-        return characters.get(((characters.size() + codeCharCypherText - codeCharVigenereKey) % characters.size()));
-    }
-
-    private int getVigenereCharacterAtPosition(int characterPosition) {
-        return characters.indexOf(vigenereKey.charAt(characterPosition % vigenereKey.length()));
-    }
-
-    private int getCodeCharAtPosition(String cypherText, int characterPosition) {
-        return characters.indexOf(cypherText.charAt(characterPosition));
-    }
-
-    private void setCharacters() {
-        for (char c : available_characters) {
-            characters.add(c);
-        }
+    private char decodeVigenere(int charToDecode, int charKey) {
+        return (char) (charToDecode - charKey);
     }
 }
