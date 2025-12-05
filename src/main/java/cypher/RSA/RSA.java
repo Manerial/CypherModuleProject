@@ -39,12 +39,12 @@ public class RSA extends CypherAbstract {
     }
 
     @Override
-    public String cryptText(String clearText) {
+    public String encrypt(String clearText) {
         return encoder.encodeText(clearText);
     }
 
     @Override
-    public String uncryptText(String cypherText) {
+    public String decipher(String cypherText) {
         return decoder.decodeMessage(cypherText);
     }
 

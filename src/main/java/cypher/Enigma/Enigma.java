@@ -117,7 +117,7 @@ public class Enigma extends CypherAbstract {
      * Encode a clear message
      */
     @Override
-    public String cryptText(String clearText) {
+    public String encrypt(String clearText) {
         rotor_pos_reset();
         return encodeMessage(clearText);
     }
@@ -151,7 +151,7 @@ public class Enigma extends CypherAbstract {
      * Decode a ciphered message
      */
     @Override
-    public String uncryptText(String cypherText) {
+    public String decipher(String cypherText) {
         try {
             rotor_pos_reset();
             return decodeMessage(cypherText);

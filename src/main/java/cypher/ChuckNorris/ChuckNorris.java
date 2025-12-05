@@ -3,6 +3,7 @@ package cypher.ChuckNorris;
 import cypher.*;
 
 import java.util.*;
+import java.util.regex.*;
 
 /**
  * Transform a text in binary and then transform the binary in a sequence of 0.
@@ -17,8 +18,8 @@ import java.util.*;
  */
 public class ChuckNorris extends CypherAbstract {
     private static final char CHUCK_NORRIS_BODY = '0';
-    private static final String CHUCK_NORRIS_DELIMITER_0 = "";
-    private static final String CHUCK_NORRIS_DELIMITER_1 = "";
+    private static final String CHUCK_NORRIS_DELIMITER_0 = "0";
+    private static final String CHUCK_NORRIS_DELIMITER_1 = "00";
 
     /**
      * Encode clear text to binary
@@ -26,7 +27,7 @@ public class ChuckNorris extends CypherAbstract {
      * Encode binary packets to Chuck Norris encryption
      */
     @Override
-    public String cryptText(String clearText) {
+    public String encrypt(String clearText) {
         String binaryString = textToBinaryString(clearText);
         ArrayList<String> binaryPacket = binaryStringToBinaryPacket(binaryString);
         return binaryPacketToChuckNorris(binaryPacket);
@@ -70,21 +71,12 @@ public class ChuckNorris extends CypherAbstract {
      */
     private ArrayList<String> binaryStringToBinaryPacket(String binaryString) {
         ArrayList<String> splittedString = new ArrayList<>();
-        char parsedChar = '0';
-        StringBuilder packet = new StringBuilder();
-
-        for (char currentCharacter : binaryString.toCharArray()) {
-            if (parsedChar != currentCharacter) {
-                parsedChar = (parsedChar == '0') ? '1' : '0';
-                if (!packet.isEmpty()) {
-                    splittedString.add(packet.toString());
-                }
-                packet = new StringBuilder();
-            }
-            packet.append(currentCharacter);
+        Pattern pattern = Pattern.compile("([0]+|[1]+)");
+        Matcher matcher = pattern.matcher(binaryString);
+        while (matcher.find()) {
+            String packet = matcher.group();
+            splittedString.add(packet);
         }
-
-        splittedString.add(packet.toString());
         return splittedString;
     }
 
@@ -95,17 +87,13 @@ public class ChuckNorris extends CypherAbstract {
      * @return a string that contains the encrypted message
      */
     private String binaryPacketToChuckNorris(ArrayList<String> binaryPackets) {
-        StringBuilder encodedMessage = new StringBuilder();
-        for (String packet : binaryPackets) {
-            if (packet.contains("0")) {
-                encodedMessage.append(CHUCK_NORRIS_DELIMITER_0 + " ");
-            } else {
-                encodedMessage.append(CHUCK_NORRIS_DELIMITER_1 + " ");
-            }
-            encodedMessage.append(getNCharacter(CHUCK_NORRIS_BODY, packet.length())).append(" ");
-        }
-        encodedMessage = new StringBuilder(encodedMessage.substring(0, encodedMessage.length() - 1));
-        return encodedMessage.toString();
+        List<String> encodedPackets = binaryPackets.stream()
+                .map(packet -> {
+                    String start = packet.contains("0") ? CHUCK_NORRIS_DELIMITER_0 : CHUCK_NORRIS_DELIMITER_1;
+                    return start + " " + getNCharacter(CHUCK_NORRIS_BODY, packet.length());
+                })
+                .toList();
+        return String.join(" ", encodedPackets);
     }
 
     /**
@@ -114,7 +102,7 @@ public class ChuckNorris extends CypherAbstract {
      * Return all
      */
     @Override
-    public String uncryptText(String cypherText) {
+    public String decipher(String cypherText) {
         String binaryMessage = chuckNorrisToBinaryString(cypherText);
         return binaryStringToText(binaryMessage);
     }
@@ -186,10 +174,7 @@ public class ChuckNorris extends CypherAbstract {
      * @return a string made of n times the given character
      */
     private static String getNCharacter(char character, int numberOfCharacters) {
-        StringBuilder nCharString = new StringBuilder();
-        for (int i = 0; i < numberOfCharacters; i++) {
-            nCharString.append(character);
-        }
-        return nCharString.toString();
+        return String.valueOf(character)
+                .repeat(Math.max(0, numberOfCharacters));
     }
 }

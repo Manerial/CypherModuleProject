@@ -33,7 +33,7 @@ public class Steganography extends CypherAbstract {
      * @param clearText : The message to hide in the image
      */
     @Override
-    public String cryptText(String clearText) {
+    public String encrypt(String clearText) {
         String imageSourceName = RESOURCES_PATH + normalImageName;
         BufferedImage bufferedImageSource = readImage(imageSourceName);
 
@@ -55,7 +55,7 @@ public class Steganography extends CypherAbstract {
      */
     @Override
     @Deprecated
-    public String uncryptText(String notUsed) {
+    public String decipher(String notUsed) {
         return uncryptText();
     }
 

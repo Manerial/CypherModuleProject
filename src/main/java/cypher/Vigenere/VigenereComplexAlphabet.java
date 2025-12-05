@@ -11,18 +11,18 @@ import java.util.*;
  * @author JHER
  *
  */
-public class Vigenere extends CypherAbstract {
+public class VigenereComplexAlphabet extends CypherAbstract {
     private String vigenereKey;
     private final ArrayList<Character> characters = new ArrayList<>();
     // will fill the characters arraylist
     private final char[] available_characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZàâäçéèëêïîôùûÀÂÊÉ,?;.:!(){}[]+-=/\\&\"' ".toCharArray();
 
 
-    public Vigenere() {
+    public VigenereComplexAlphabet() {
         setCharacters();
     }
 
-    public Vigenere(String encodingKey) {
+    public VigenereComplexAlphabet(String encodingKey) {
         setCharacters();
         setEncodingKey(encodingKey);
     }
@@ -42,7 +42,7 @@ public class Vigenere extends CypherAbstract {
      * result = bdfhfik
      */
     @Override
-    public String cryptText(String clearText) {
+    public String encrypt(String clearText) {
         StringBuilder encodedMessage = new StringBuilder();
         for (int characterPosition = 0; characterPosition < clearText.length(); characterPosition++) {
             int codeCharClearText = getCodeCharAtPosition(clearText, characterPosition);
@@ -63,7 +63,7 @@ public class Vigenere extends CypherAbstract {
      * result = abcdef
      */
     @Override
-    public String uncryptText(String cypherText) {
+    public String decipher(String cypherText) {
         StringBuilder decodedMessage = new StringBuilder();
         for (int characterPosition = 0; characterPosition < cypherText.length(); characterPosition++) {
             int codeCharCypherText = getCodeCharAtPosition(cypherText, characterPosition);
