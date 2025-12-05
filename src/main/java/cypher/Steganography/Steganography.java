@@ -38,7 +38,7 @@ public class Steganography extends CypherAbstract {
         BufferedImage bufferedImageSource = readImage(imageSourceName);
 
         BufferedImage imageToCrypt = copyImage(bufferedImageSource);
-        imageToCrypt = encodeImage(imageToCrypt, clearText);
+        encodeImage(imageToCrypt, clearText);
         try {
             saveImage(imageToCrypt, new File(RESOURCES_PATH + cryptedTextImageName), "png");
         } catch (Exception e) {
@@ -50,21 +50,11 @@ public class Steganography extends CypherAbstract {
     /**
      * Extracts the hidden message from an image
      *
-     * @param notUsed : Unused
+     * @param notUsed : Unused (will use the image instead)
      * @return the message hidden in the image
      */
     @Override
-    @Deprecated
     public String decipher(String notUsed) {
-        return uncryptText();
-    }
-
-    /**
-     * Extracts the hidden message from an image
-     *
-     * @return the message hidden in the image
-     */
-    public String uncryptText() {
         BufferedImage image = copyImage(readImage(RESOURCES_PATH + cryptedTextImageName));
         byte[] decode = decodeImage(getBytesImage(image));
         return (new String(decode));
@@ -106,9 +96,8 @@ public class Steganography extends CypherAbstract {
      *
      * @param image : The image to add hidden text to
      * @param text  : The text to hide in the image
-     * @return the image with the text hidden in it
      */
-    private BufferedImage encodeImage(BufferedImage image, String text) {
+    private void encodeImage(BufferedImage image, String text) {
         //convert all items to byte arrays: image, message, message length
         byte[] imageBytes = getBytesImage(image);
         byte[] textBytes = text.getBytes();
@@ -121,8 +110,6 @@ public class Steganography extends CypherAbstract {
         // Register the message itself
         // 4 bytes of space for the length: 4bytes*8bit = 32 bits
         encodeData(imageBytes, textBytes, 32);
-
-        return image;
     }
 
     /**
