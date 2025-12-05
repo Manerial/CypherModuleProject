@@ -1,5 +1,10 @@
 package cypher.Enigma;
 
+import lombok.*;
+import org.apache.commons.lang3.tuple.*;
+
+import java.util.*;
+
 
 /**
  * The "machine" when configured.
@@ -8,7 +13,10 @@ package cypher.Enigma;
  * @author JHER
  *
  */
-record RotorIncrementor(Rotor selected_rotor_1, Rotor selected_rotor_2, Rotor selected_rotor_3, Rotor selected_mirror) {
+@AllArgsConstructor
+public class RotorIncrementor {
+    private List<Pair<Rotor, Integer>> rotors;
+    private Pair<Rotor, Integer> selected_mirror;
 
     /**
      * Encrypt a character with the Enigma method and rotate them when needed
@@ -17,21 +25,32 @@ record RotorIncrementor(Rotor selected_rotor_1, Rotor selected_rotor_2, Rotor se
      * @return the encrypted character
      */
     char cryptAndRotate(char character) {
-        char encoded_c = selected_rotor_1.getPermutedChar(character);
-        encoded_c = selected_rotor_2.getPermutedChar(encoded_c);
-        encoded_c = selected_rotor_3.getPermutedChar(encoded_c);
-
-        encoded_c = selected_mirror.getPermutedChar(encoded_c);
-
-        encoded_c = selected_rotor_3.getPermutedCharInverse(encoded_c);
-        encoded_c = selected_rotor_2.getPermutedCharInverse(encoded_c);
-        encoded_c = selected_rotor_1.getPermutedCharInverse(encoded_c);
-
-        if (selected_rotor_1.increment()) {
-            if (selected_rotor_2.increment()) {
-                selected_rotor_3.increment();
-            }
+        char encodedChar = character;
+        for (Pair<Rotor, Integer> rotorIntegerPair : rotors) {
+            Rotor rotor = rotorIntegerPair.getKey();
+            rotor.getPermutedChar(encodedChar);
         }
-        return encoded_c;
+
+        encodedChar = selected_mirror.getKey().getPermutedChar(encodedChar);
+
+        for (Pair<Rotor, Integer> rotorIntegerPair : rotors.reversed()) {
+            Rotor rotor = rotorIntegerPair.getKey();
+            rotor.getPermutedChar(encodedChar);
+        }
+
+        rotors.stream()
+                .map(Pair::getKey)
+                .forEach(Rotor::increment);
+
+        return encodedChar;
+    }
+
+    /**
+     * Reset the initial places of the rotors (to decrypt, the rotors has to be at the same place)
+     */
+    public void rotor_pos_reset() {
+        for (Pair<Rotor, Integer> rotorIntegerPair : rotors) {
+            rotorIntegerPair.getKey().setBase(rotorIntegerPair.getValue());
+        }
     }
 }
